@@ -8,13 +8,13 @@ The MD step is abstracted on **two axes**:
 
 - **Engine** — *what* computes the dynamics: **GROMACS** (`gmx mdrun`) or
   **OpenMM** (in-process Python API, auto CUDA/OpenCL/CPU).
-- **Execution target** — *where* GROMACS runs: on-prem **Slurm** (L40s GPU),
-  **PBS** (idle iREMB CPU nodes), or a **Colab/local** subprocess.
+- **Execution target** — *where* GROMACS runs: on-prem **Slurm** (GPU),
+  **PBS** (CPU), or a **Colab/local** subprocess.
 
 So the agent can pick a GROMACS run on a scheduler, or a zero-setup OpenMM run
 right inside the server process — without caring about the mechanics.
 
-> ⚠️ Public RCSB/UniProt data only. Contains no patent-encumbered pipelines.
+> ⚠️ Public RCSB/UniProt data only. 
 
 ## Architecture
 
