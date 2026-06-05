@@ -1,0 +1,6 @@
+# normalize line endings; keep shell scripts LF so they run on Linux clusters
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.png binary
+*.pdf binary

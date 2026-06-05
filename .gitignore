@@ -1,0 +1,20 @@
+# runtime artifacts (trajectories, scheduler state, analysis output)
+work/
+
+# internal development log (cluster IPs, infra notes — not for public repo)
+STATUS.md
+
+# downloaded public structures (regenerable via fetch_structure)
+*.pdb
+!docs/**/*.pdb
+
+# python
+**/__pycache__/
+*.py[cod]
+*.npz
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

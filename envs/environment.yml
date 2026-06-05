@@ -1,0 +1,17 @@
+name: agentic-protein-workflow
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - biopython
+  - mdanalysis
+  - pandas
+  - numpy
+  - matplotlib
+  # - gromacs        # optional: enable to run the GROMACS engine locally/Colab
+  - openmm           # in-process MD engine (auto CUDA/OpenCL/CPU)
+  - pdbfixer         # complete missing heavy atoms before pdb2gmx
+  - pip
+  - pip:
+      - mcp          # Model Context Protocol Python SDK (FastMCP)

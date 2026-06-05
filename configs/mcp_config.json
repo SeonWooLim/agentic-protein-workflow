@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "structure": {
+      "command": "python",
+      "args": ["mcp_servers/structure_server.py"],
+      "env": {"APW_WORKDIR": "./work"}
+    },
+    "hpc": {
+      "command": "python",
+      "args": ["mcp_servers/hpc_server.py"],
+      "env": {
+        "APW_WORKDIR": "./work",
+        "APW_SLURM_PARTITION": "l40sq",
+        "APW_SLURM_NODE": "",
+        "APW_GMX_SIF": "gmx_2024.sif",
+        "APW_PBS_QUEUE": "workq",
+        "APW_PBS_NCPUS": "8",
+        "APW_PBS_NGPUS": "0",
+        "APW_PBS_GMX_MODULE": "GROMACS/2025.02",
+        "APW_PBS_GMX_BIN": "gmx_mpi",
+        "APW_PBS_MPI_LAUNCH": "",
+        "APW_PBS_EXTRA_MODULES": "CUDA/12.4 OPENMPI/4.1.6.GCC5.8",
+        "APW_REMOTE_CMD": "",
+        "APW_REMOTE_WORKDIR": "/scratch/<user>",
+        "APW_SCP_CMD": "",
+        "APW_REMOTE_TARGET": "",
+        "APW_SLURM_REMOTE_CMD": "",
+        "APW_SLURM_REMOTE_WORKDIR": "/scratch/<user>"
+      }
+    },
+    "openmm": {
+      "command": "python",
+      "args": ["mcp_servers/openmm_server.py"],
+      "env": {"APW_WORKDIR": "./work"}
+    },
+    "analysis": {
+      "command": "python",
+      "args": ["mcp_servers/analysis_server.py"],
+      "env": {"APW_WORKDIR": "./work"}
+    }
+  }
+}
