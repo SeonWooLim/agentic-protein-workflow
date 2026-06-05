@@ -27,8 +27,8 @@ right inside the server process — without caring about the mechanics.
    structure_server     hpc_server (GROMACS)   analysis_server
    ├ fetch_structure    ├ submit_md_job ─┐     ├ analyze_trajectory
    └ extract_sequence   └ check_job      │     └ generate_report
-                          backend=slurm ─┼─► sbatch + squeue (L40s GPU)
-                          backend=pbs ───┼─► qsub + qstat    (idle iREMB CPU)
+                          backend=slurm ─┼─► sbatch + squeue (GPU)
+                          backend=pbs ───┼─► qsub + qstat    (CPU)
                           backend=colab ─┘─► gmx mdrun subprocess (Colab/local)
 
    openmm_server (OpenMM)         ── in-process, no scheduler ──┐
