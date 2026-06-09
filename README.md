@@ -17,7 +17,7 @@ right inside the server process — without caring about the mechanics.
 > ⚠️ Public RCSB/UniProt data only. 
 
 ## Architecture
-```
+```mermaid
 flowchart TD
     P["User prompt:<br/>'Analyze aggregation risk of 1N8Z, run 100 ns MD'"]
     A["LLM agent (host)"]
@@ -67,7 +67,6 @@ flowchart TD
     %% report output
     AN2 -->|"aggregation score,<br/>RMSD / RMSF / SASA plots"| R["report.md + figures"]
     R -.->|"returned to agent"| A
-
 ```
 
 ## MCP servers
