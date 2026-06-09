@@ -18,23 +18,57 @@ right inside the server process — without caring about the mechanics.
 
 ## Architecture
 
-```
-"Analyze aggregation risk of antibody 1N8Z and run a 100 ns MD"
-        │
-   ┌────▼─────────────┐   MCP tool calls
-   │  LLM agent (host) │ ───────────────┐
-   └──────────────────┘                 │
-   structure_server     hpc_server (GROMACS)   analysis_server
-   ├ fetch_structure    ├ submit_md_job ─┐     ├ analyze_trajectory
-   └ extract_sequence   └ check_job      │     └ generate_report
-                          backend=slurm ─┼─► sbatch + squeue (GPU)
-                          backend=pbs ───┼─► qsub + qstat    (CPU)
-                          backend=colab ─┘─► gmx mdrun subprocess (Colab/local)
+flowchart TD
+    P["User prompt:<br/>'Analyze aggregation risk of 1N8Z, run 100 ns MD'"]
+    A["LLM agent (host)"]
+    P --> A
 
-   openmm_server (OpenMM)         ── in-process, no scheduler ──┐
-   ├ run_openmm_md  ──────────────► CUDA / OpenCL / CPU (auto)  ┘
-   └ list_platforms                 writes DCD → analyze_trajectory
-```
+    A -. MCP tool calls .-> SS
+    A -. MCP tool calls .-> HPC
+    A -. MCP tool calls .-> OM
+    A -. MCP tool calls .-> AN
+
+    subgraph SS["structure_server"]
+        SS1["fetch_structure"] --> SS2["extract_sequence"]
+    end
+
+    subgraph HPC["hpc_server (GROMACS)"]
+        HPC1["submit_md_job"]
+        HPC2["check_job"]
+        HPC1 -->|"job_id"| HPC2
+        HPC2 -->|"status = running<br/>(poll / sleep)"| HPC2
+    end
+
+    subgraph OM["openmm_server (OpenMM)"]
+        OM1["run_openmm_md"]
+        OM2["list_platforms"]
+    end
+
+    subgraph AN["analysis_server"]
+        AN1["analyze_trajectory"] --> AN2["generate_report"]
+    end
+
+    %% structure feeds the simulation
+    SS2 -->|"sequence / PDB"| HPC1
+    SS2 -->|"sequence / PDB"| OM1
+
+    %% hpc_server backend routing
+    HPC1 -->|"backend=slurm"| BSL["sbatch + squeue (GPU)"]
+    HPC1 -->|"backend=pbs"| BPB["qsub + qstat (CPU)"]
+    HPC1 -->|"backend=colab"| BCO["gmx mdrun subprocess (Colab / local)"]
+
+    %% openmm in-process, no scheduler
+    OM1 -->|"in-process, no scheduler"| OMP["CUDA / OpenCL / CPU (auto)"]
+
+    %% trajectories converge on analysis
+    HPC2 -->|"status = done<br/>trajectory (XTC)"| AN1
+    OMP -->|"writes DCD"| AN1
+
+    %% report output
+    AN2 -->|"aggregation score,<br/>RMSD / RMSF / SASA plots"| R["report.md + figures"]
+    R -.->|"returned to agent"| A
+
+
 
 ## MCP servers
 | Server | Tools | Role |
